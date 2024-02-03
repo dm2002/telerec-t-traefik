@@ -1,5 +1,21 @@
 http:
   middlewares:
+    my-geoblock:
+        plugin:
+            geoblock:
+                allowLocalRequests: "false"
+                allowUnknownCountries: "false"
+                api: https://get.geojs.io/v1/ip/country/{ip}
+                apiTimeoutMs: "150"
+                cacheSize: "15"
+                countries:
+                    - CH
+                forceMonthlyUpdate: "true"
+                logAllowedRequests: "false"
+                logApiRequests: "true"
+                logLocalRequests: "false"
+                silentStartUp: "false"
+                unknownCountryApiResponse: nil
     https-redirect:
       redirectScheme:
         scheme: https
