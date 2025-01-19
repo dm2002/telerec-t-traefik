@@ -1,12 +1,31 @@
 # Globally redirect all traffic to https
+tcp:
+  routers:
+    foundry-https-redirect:
+      rule: "HostSNI(`foundry*`)"
+      entryPoints:
+        - foundry
+      middlewares:
+       - foundry-middleware
+      tls: {}
+      service: foundry
+  
+  services:
+    foundry:
+      loadBalancer:
+        servers:
+          - address: "foundry:30000"
 
 http:
   routers:
     https-redirect:
       rule: 'HostRegexp(`{any:.*}`)'
+      entryPoints:
+        - web
+        - web-secure
       middlewares:
        - https-redirect
-      service: redirect-all
+      service: redirect-all    
 
   services:
     redirect-all:

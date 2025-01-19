@@ -10,6 +10,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "30000:30000"
     environment:
       PUID: "{{ PUID }}"
       PGID: "{{ PGID }}"
@@ -23,6 +24,9 @@ services:
       << : *base_labels
       traefik.http.middlewares.{{ service_cfg.name }}_web-auth.basicauth.users: "{{ service_cfg.http_basic_users }}"
       traefik.http.routers.{{ service_cfg.name }}_web.middlewares: "{{ service_cfg.name }}_web-auth"
+      traefik.http.routers.{{ service_cfg.name }}_foundry.entryPoints: "foundry"
+      traefik.http.routers.{{ service_cfg.name }}_foundry.rule: "Host(`{{ service_cfg.domain }}`)"
+      traefik.http.routers.{{ service_cfg.name }}_foundry.service: "{{ service_cfg.name }}"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks: *base_networks

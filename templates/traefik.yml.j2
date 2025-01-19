@@ -11,6 +11,8 @@ entryPoints:
     address: ":443"
     forwardedHeaders:
       insecure: true
+  foundry:
+    address: ":30000/tcp"
 
 providers:
   docker:
@@ -28,6 +30,20 @@ certificatesResolvers:
       storage: /etc/traefik/acme/acme.json
       httpChallenge:
         entryPoint: web
+
+tcp:
+  routers:
+    foundry-tcp-router:
+      entryPoints:
+        - foundry
+      rule: "HostSNI(`foundry.riedberg-server.de`)"
+      service: foundry-tcp-service
+
+  services:
+    foundry-tcp-service:
+      loadBalancer:
+        servers:
+          - address: "foundry-service:30000"
 
 accessLog: {}
 ping: {}

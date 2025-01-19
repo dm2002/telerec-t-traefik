@@ -52,6 +52,7 @@ http:
         stsPreload: true
         stsSeconds: 31536000
         customFrameOptionsValue: "SAMEORIGIN"
+    
 {% if service_cfg.internal_ip_ranges|length >= 1 %}
     internal-ips-only:
       ipWhiteList:
@@ -68,3 +69,8 @@ http:
       rateLimit:
         average: 100
         burst: 50
+tcp:
+  middlewares:
+    foundry-middleware:
+      headers:
+        customFrameOptionsValue: "SAMEORIGIN"
