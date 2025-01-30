@@ -21,6 +21,18 @@ services:
       << : *base_labels
       traefik.http.middlewares.{{ service_cfg.name }}_web-auth.basicauth.users: "{{ service_cfg.http_basic_users }}"
       traefik.http.routers.{{ service_cfg.name }}_web.middlewares: "{{ service_cfg.name }}_web-auth"
+      # Middleware für die Umleitung von www zu non-www
+      traefik.http.middlewares.redirect-www.redirectregex.regex: "^https?://www\\.(.*)"
+      traefik.http.middlewares.redirect-www.redirectregex.replacement: "https://$$1"
+      traefik.http.middlewares.redirect-www.redirectregex.permanent: "true"
+
+      #Router für www.riedberg-server.de -> Weiterleitung auf non-www
+      traefik.http.routers.www-router.rule: "Host(`www.riedberg-server.de`)"
+      traefik.http.routers.www-router.entrypoints: "web-secure"
+      traefik.http.routers.www-router.middlewares: "redirect-www"
+      traefik.http.routers.www-router.service: "noop@internal"
+      traefik.http.routers.www-router.tls: "true"
+      traefik.http.routers.www-router.tls.certresolver: "default"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks: *base_networks
