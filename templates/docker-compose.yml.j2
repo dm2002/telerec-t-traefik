@@ -6,8 +6,11 @@ services:
     healthcheck:
       test: "traefik healthcheck"
     ports:
+      - "25:25"
       - "80:80"
       - "443:443"
+      - "465:465"
+      - "993:993"
     environment:
       PUID: "{{ PUID }}"
       PGID: "{{ PGID }}"

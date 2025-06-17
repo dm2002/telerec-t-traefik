@@ -16,6 +16,15 @@ http:
         customRequestHeaders:
           X-Frame-Options: "SAMEORIGIN"
         customFrameOptionsValue: "SAMEORIGIN"
+{% if service_cfg.internal_ip_ranges|length >= 1 %}
+    internal-ips-only:
+      ipWhiteList:
+        sourceRange:
+          {% for range in service_cfg.internal_ip_ranges %}
+          - "{{ range }}"
+          {% endfor %}
+{% endif %}
+
     hsts-header:
       headers:
         browserXssFilter: true
@@ -36,14 +45,6 @@ http:
         stsPreload: true
         stsSeconds: 31536000
         customFrameOptionsValue: "SAMEORIGIN"
-{% if service_cfg.internal_ip_ranges|length >= 1 %}
-    internal-ips-only:
-      ipWhiteList:
-        sourceRange:
-          {% for range in service_cfg.internal_ip_ranges %}
-          - "{{ range }}"
-          {% endfor %}
-{% endif %}
 
     middlewares-compress:
       compress: {}
