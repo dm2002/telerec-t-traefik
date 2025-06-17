@@ -32,7 +32,7 @@ providers:
 certificatesResolvers:
   default:
     acme:
-      email: {{ service_cfg.mail }}
+      email: {{ admin.email }}
       storage: /etc/traefik/acme/acme.json
       httpChallenge:
         entryPoint: web
@@ -41,4 +41,4 @@ accessLog: {}
 ping: {}
 
 log:
-  level: ERROR
+  level: INFO
