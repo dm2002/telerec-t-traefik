@@ -7,15 +7,18 @@ entryPoints:
     address: ":80"
     forwardedHeaders:
       insecure: true
-    http:
-      redirections:
-        entryPoint:
-          scheme: https
-          to: web-secure
   web-secure:
     address: ":443"
     forwardedHeaders:
       insecure: true
+  imaps:
+    address: ":993"
+  imap:
+    address: ":143"
+  smtps:
+    address: ":465"
+  smtp:
+    address: ":25"
 
 providers:
   docker:
@@ -29,7 +32,7 @@ providers:
 certificatesResolvers:
   default:
     acme:
-      email: {{ admin.email }}
+      email: {{ service_cfg.mail }}
       storage: /etc/traefik/acme/acme.json
       httpChallenge:
         entryPoint: web
@@ -38,4 +41,4 @@ accessLog: {}
 ping: {}
 
 log:
-  level: INFO
+  level: ERROR

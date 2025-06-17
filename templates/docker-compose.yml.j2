@@ -1,38 +1,64 @@
+#
+# Ansible managed
+#
+
+# Labels for Traefik, Watchtower, and Autoheal
+#   (docker compose ignores fields that start with `x-`. So we can use them to
+#    define reusable fragments with `&anchors`. See:
+#    https://docs.docker.com/compose/compose-file/11-extension/ )
+x-labels: &base_labels
+      traefik.enable: "true"
+      traefik.docker.network: "traefik_default"
+      traefik.http.services.traefik.loadbalancer.server.port: "8080"
+      traefik.http.routers.traefik_web.EntryPoints: "web-secure"
+      traefik.http.routers.traefik_web.rule: "Host(`{{ service_cfg.domain }}`)"
+      traefik.http.routers.traefik_web.service: "traefik"
+      traefik.http.routers.traefik_web.tls: true
+      traefik.http.routers.traefik_web.tls.certresolver: "default"
+      com.centurylinklabs.watchtower.enable: "true"
+      autoheal: "true"
+
+# Reusable default networks configuration to ensure container is part of both
+# the traefik network and the default network of this compose file
+x-networks: &base_networks
+  default:
+  traefik_net:
+    aliases:
+      - traefik
+
+# The main Docker Compose file
 services:
   traefik:
-    image: "traefik:{{ service_cfg.version }}"
-    container_name: "{{ service_cfg.name }}"
+    image: "traefik:latest"
+    container_name: "traefik"
     restart: always
     healthcheck:
       test: "traefik healthcheck"
     ports:
+      - "25:25"
       - "80:80"
       - "443:443"
+      - "465:465"
+      - "993:993"
     environment:
-      PUID: "{{ PUID }}"
-      PGID: "{{ PGID }}"
-      TZ: "{{ timezone }}"
+      PUID: "1000"
+      PGID: "1001"
+      TZ: "Europe/Berlin"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:rw"
-      - "{{ service_cfg.directory }}/traefik.yml:/etc/traefik/traefik.yml:ro"
-      - "{{ service_cfg.directory }}/dynamic:/etc/traefik/dynamic"
-      - "{{ service_cfg.directory }}/acme.json:/etc/traefik/acme/acme.json:rw"
+      - "/docker/traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "/docker/traefik/dynamic:/etc/traefik/dynamic"
+      - "/docker/traefik/acme.json:/etc/traefik/acme/acme.json:rw"
     labels:
       << : *base_labels
-      traefik.http.middlewares.{{ service_cfg.name }}_web-auth.basicauth.users: "{{ service_cfg.http_basic_users }}"
-      traefik.http.routers.{{ service_cfg.name }}_web.middlewares: "{{ service_cfg.name }}_web-auth"
-      # Middleware für die Umleitung von www zu non-www
-      traefik.http.middlewares.redirect-www.redirectregex.regex: "^https?://www\\.(.*)"
-      traefik.http.middlewares.redirect-www.redirectregex.replacement: "https://$$1"
-      traefik.http.middlewares.redirect-www.redirectregex.permanent: "true"
-
-      #Router für www.riedberg-server.de -> Weiterleitung auf non-www
-      traefik.http.routers.www-router.rule: "Host(`www.riedberg-server.de`)"
-      traefik.http.routers.www-router.entrypoints: "web-secure"
-      traefik.http.routers.www-router.middlewares: "redirect-www"
-      traefik.http.routers.www-router.service: "noop@internal"
-      traefik.http.routers.www-router.tls: "true"
-      traefik.http.routers.www-router.tls.certresolver: "default"
+      traefik.http.middlewares.traefik_web-auth.basicauth.users: {{ service_cfg.basicauth }}
+      traefik.http.routers.traefik_web.middlewares: "traefik_web-auth"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks: *base_networks
+
+# Access the traefik-network
+networks:
+  traefik_net:
+    external: true
+    name: traefik_default
