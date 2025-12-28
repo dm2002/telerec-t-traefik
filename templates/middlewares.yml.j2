@@ -13,12 +13,12 @@ http:
         stsIncludeSubdomains: true
         stsPreload: true
         stsSeconds: 31536000
-        customRequestHeaders:
-          X-Frame-Options: "SAMEORIGIN"
         customFrameOptionsValue: "SAMEORIGIN"
+        contentSecurityPolicy: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'"
+        referrerPolicy: "strict-origin-when-cross-origin"
 {% if service_cfg.internal_ip_ranges|length >= 1 %}
     internal-ips-only:
-      ipWhiteList:
+      ipAllowList:
         sourceRange:
           {% for range in service_cfg.internal_ip_ranges %}
           - "{{ range }}"
@@ -35,6 +35,8 @@ http:
         stsPreload: true
         stsSeconds: 31536000
         customFrameOptionsValue: "SAMEORIGIN"
+        contentSecurityPolicy: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'"
+        referrerPolicy: "strict-origin-when-cross-origin"
     default-headers:
       headers:
         browserXssFilter: true
@@ -45,6 +47,8 @@ http:
         stsPreload: true
         stsSeconds: 31536000
         customFrameOptionsValue: "SAMEORIGIN"
+        contentSecurityPolicy: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'"
+        referrerPolicy: "strict-origin-when-cross-origin"
 
     middlewares-compress:
       compress: {}
@@ -53,3 +57,4 @@ http:
       rateLimit:
         average: 100
         burst: 50
+        period: "1s"
