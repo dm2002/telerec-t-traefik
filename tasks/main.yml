@@ -62,6 +62,13 @@
     mode: 0600
   tags: [ always, started, restarted, recreated ]
 
+- name: Create shared backend network
+  community.docker.docker_network:
+    name: backend_shared
+    driver: bridge
+    state: present
+  tags: [ always, started, restarted, recreated ]
+
 - ansible.builtin.import_role:
     name: compose_hull
     tasks_from: deploy_docker
