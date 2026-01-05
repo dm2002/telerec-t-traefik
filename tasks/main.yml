@@ -6,10 +6,9 @@
       directory: "{{ docker_dir }}/traefik"
       name: traefik
       version: "latest"
-      domain: "{{ service_cfg.domain }}"
       port: 8080
-      traefik: true
-      external: true
+      traefik: false
+      external: false
       watchtower: true
       autoheal: true
       internal_ip_ranges: []
