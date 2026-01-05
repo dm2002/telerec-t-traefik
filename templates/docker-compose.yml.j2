@@ -22,8 +22,8 @@ services:
       - "{{ service_cfg.directory }}/acme.json:/etc/traefik/acme/acme.json:rw"
     labels:
       << : *base_labels
-      traefik.http.middlewares.{{ service_cfg.name }}_web-auth.basicauth.users: "{{ service_cfg.http_basic_users }}"
-      traefik.http.routers.{{ service_cfg.name }}_web.middlewares: "{{ service_cfg.name }}_web-auth"
+      # Traefik Dashboard wird via OAuth2-Proxy geschützt (traefikauth)
+      # HTTP Basic Auth wurde durch OAuth2 ersetzt
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks: *base_networks

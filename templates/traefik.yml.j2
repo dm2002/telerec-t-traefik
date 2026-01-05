@@ -2,6 +2,12 @@ api:
   dashboard: true
   insecure: true
 
+experimental:
+  plugins:
+    traefikoidc:
+      moduleName: github.com/lukaszraczylo/traefikoidc
+      version: v0.8.17
+
 entryPoints:
   web:
     address: ":80"
@@ -41,4 +47,4 @@ accessLog: {}
 ping: {}
 
 log:
-  level: INFO
+  level: WARN

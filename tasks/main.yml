@@ -6,10 +6,9 @@
       directory: "{{ docker_dir }}/traefik"
       name: traefik
       version: "latest"
-      domain: "{{ service_cfg.domain }}"
       port: 8080
-      traefik: true
-      external: true
+      traefik: false
+      external: false
       watchtower: true
       autoheal: true
       internal_ip_ranges: []
@@ -60,6 +59,13 @@
     group: docker
     owner: "{{ admin.name }}"
     mode: 0600
+  tags: [ always, started, restarted, recreated ]
+
+- name: Create shared backend network
+  community.docker.docker_network:
+    name: backend_shared
+    driver: bridge
+    state: present
   tags: [ always, started, restarted, recreated ]
 
 - ansible.builtin.import_role:
