@@ -58,3 +58,61 @@ http:
         average: 100
         burst: 50
         period: "1s"
+
+    # OIDC Middleware für JDownloader
+    jdownloader-oidc:
+      plugin:
+        traefikoidc:
+          providerURL: "https://auth.riedberg-server.de/realms/riedberg-server"
+          clientID: "jdownloaderoauth2"
+          clientSecret: "{{ lookup('pipe', './scripts/bws-get.sh dm2002-jdownloader-oauth-client-secret') }}"
+          callbackURL: "/oauth2/callback"
+          logoutURL: "/oauth2/sign_out"
+          sessionEncryptionKey: "{{ lookup('pipe', './scripts/bws-get.sh dm2002-jdownloader-oidc-session-key') }}"
+          forceHTTPS: true
+          logLevel: "debug"
+          scopes:
+            - "openid"
+            - "profile"
+            - "email"
+          allowedRolesAndGroups:
+            - "jdownloader-user"
+
+    # OIDC Middleware für FoundryVTT
+    foundry-oidc:
+      plugin:
+        traefikoidc:
+          providerURL: "https://auth.riedberg-server.de/realms/riedberg-server"
+          clientID: "foundryauth"
+          clientSecret: "{{ lookup('pipe', './scripts/bws-get.sh dm2002-foundryauth-client-secret') }}"
+          callbackURL: "/oauth2/callback"
+          logoutURL: "/oauth2/sign_out"
+          sessionEncryptionKey: "{{ lookup('pipe', './scripts/bws-get.sh dm2002-foundryauth-cookie-secret') }}"
+          forceHTTPS: true
+          logLevel: "debug"
+          scopes:
+            - "openid"
+            - "profile"
+            - "email"
+          allowedRolesAndGroups:
+            - "foundry-user"
+
+    # OIDC Middleware für SillyTavern
+    silly-oidc:
+      plugin:
+        traefikoidc:
+          providerURL: "https://auth.riedberg-server.de/realms/riedberg-server"
+          clientID: "Sillyoauth2"
+          clientSecret: "{{ lookup('pipe', './scripts/bws-get.sh dm2002-silly-oauth-client-secret') }}"
+          callbackURL: "/oauth2/callback"
+          logoutURL: "/oauth2/sign_out"
+          sessionEncryptionKey: "{{ lookup('pipe', './scripts/bws-get.sh dm2002-silly-oidc-session-key') }}"
+          forceHTTPS: true
+          logLevel: "debug"
+          scopes:
+            - "openid"
+            - "profile"
+            - "email"
+          allowedRolesAndGroups:
+            - "silly-user"
+
