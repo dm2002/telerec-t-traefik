@@ -1,12 +1,12 @@
 api:
   dashboard: true
-  insecure: true
+  insecure: true  # Intern auf :8080, extern OAuth2-geschützt via traefikauth
 
 experimental:
   plugins:
     traefikoidc:
       moduleName: github.com/lukaszraczylo/traefikoidc
-      version: v0.8.17
+      version: v0.8.19
 
 entryPoints:
   web:
