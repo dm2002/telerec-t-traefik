@@ -42,6 +42,7 @@
   with_items:
     - tls-options.yml
     - https-redirect-all.yml
+    - tcp-serverstransport.yml
 
 - name: Copy rules/middlewares.yml
   template:

@@ -1,0 +1,8 @@
+# TCP ServersTransport für PROXY Protocol
+# Wird von Mail-Services referenziert um echte Client-IPs zu erhalten
+
+tcp:
+  serversTransports:
+    proxyprotocol-v2:
+      proxyProtocol:
+        version: 2
