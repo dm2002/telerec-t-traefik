@@ -72,3 +72,9 @@
 - ansible.builtin.import_role:
     name: compose_hull
     tasks_from: deploy_docker
+
+- name: Restart Traefik container
+  community.docker.docker_compose_v2:
+    project_src: "{{ service_cfg.directory }}"
+    state: restarted
+  tags: [ always, started, restarted, recreated ]

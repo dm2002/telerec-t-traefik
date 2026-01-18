@@ -13,10 +13,20 @@ entryPoints:
     address: ":80"
     forwardedHeaders:
       insecure: true
+    transport:
+      respondingTimeouts:
+        readTimeout: 1800s
+        writeTimeout: 1800s
+        idleTimeout: 180s
   web-secure:
     address: ":443"
     forwardedHeaders:
       insecure: true
+    transport:
+      respondingTimeouts:
+        readTimeout: 1800s
+        writeTimeout: 1800s
+        idleTimeout: 180s
   imaps:
     address: ":993"
   imap:
