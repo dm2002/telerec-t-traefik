@@ -1,15 +1,13 @@
-# Globally redirect all traffic to https
+# Globally redirect all HTTP traffic to HTTPS
+# This router listens on the 'web' entrypoint (port 80) and redirects all traffic to HTTPS
 
 http:
   routers:
     https-redirect:
-      rule: 'HostRegexp(`{any:.*}`)'
+      entryPoints:
+        - web
+      rule: 'PathPrefix(`/`)'
       middlewares:
-       - https-redirect
-      service: redirect-all
-
-  services:
-    redirect-all:
-      loadBalancer:
-        servers:
-         - url: ""
+        - https-redirect
+      service: noop@internal
+      priority: 1
