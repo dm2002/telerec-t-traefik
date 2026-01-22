@@ -59,6 +59,16 @@ http:
         burst: 50
         period: "1s"
 
+    # Fail2ban Plugin - Schutz gegen Brute-Force und Scanner
+    fail2ban:
+      plugin:
+        fail2ban:
+          enabled: true
+          findtime: "3m"               # 3 Minuten Zeitfenster für Fehlversuche
+          bantime: "3h"                # 3 Stunden Ban-Dauer
+          maxretry: 10                 # 10 Fehlversuche erlaubt
+          statuscode: "400,401,403-499" # Client-Errors (402 Payment Required ausgenommen)
+
     # OIDC Middleware für JDownloader
     jdownloader-oidc:
       plugin:
