@@ -57,9 +57,14 @@
     content: ""
     dest: '{{ service_cfg.directory }}/acme.json'
     force: no
-    group: docker
+  tags: [ always, started, restarted, recreated ]
+
+- name: ensure acme.json has correct permissions
+  file:
+    path: '{{ service_cfg.directory }}/acme.json'
     owner: "{{ admin.name }}"
-    mode: 0600
+    group: docker
+    mode: "0600"
   tags: [ always, started, restarted, recreated ]
 
 - name: Create shared backend network
