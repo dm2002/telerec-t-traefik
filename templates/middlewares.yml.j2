@@ -80,7 +80,7 @@ http:
           logoutURL: "/oauth2/sign_out"
           sessionEncryptionKey: "{{ lookup('pipe', './scripts/bws-get.sh dm2002-jdownloader-oidc-session-key') }}"
           forceHTTPS: true
-          logLevel: "debug"
+          logLevel: "info"
           scopes:
             - "openid"
             - "profile"
@@ -99,7 +99,7 @@ http:
           logoutURL: "/oauth2/sign_out"
           sessionEncryptionKey: "{{ lookup('pipe', './scripts/bws-get.sh dm2002-foundryauth-cookie-secret') }}"
           forceHTTPS: true
-          logLevel: "debug"
+          logLevel: "error"
           scopes:
             - "openid"
             - "profile"
@@ -118,7 +118,8 @@ http:
           logoutURL: "/oauth2/sign_out"
           sessionEncryptionKey: "{{ lookup('pipe', './scripts/bws-get.sh dm2002-silly-oidc-session-key') }}"
           forceHTTPS: true
-          logLevel: "debug"
+          sessionMaxAge: 2604800
+          logLevel: "error"
           scopes:
             - "openid"
             - "profile"
